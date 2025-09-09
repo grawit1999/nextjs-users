@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Container, Card, CardActions, CardContent, CardMedia, Button, Typography
+  Container, Card, CardContent, CardMedia, Typography
 } from '@mui/material';
 
 export async function getData(id) {
