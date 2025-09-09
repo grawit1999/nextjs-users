@@ -1,6 +1,6 @@
 import React from 'react'
-import {
-  Container, Card, CardContent, CardMedia, Typography
+import { 
+  Container, Card, CardActions, CardContent, CardMedia, Button, Typography
 } from '@mui/material';
 
 export async function getData(id) {
@@ -20,7 +20,7 @@ export default async function page({ params }) {
   console.log(data.length)
   return (
     <Container maxWidth="md" sx={{ mt: 2 }}>
-      {data.length > 0 &&
+      { data.length > 0 &&
         <Card>
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">

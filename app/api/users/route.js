@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { mysqlPool } from "@/utils/db";
 
-export async function GET() {
+export async function GET(request) {
     const promisePool = mysqlPool.promise()
-    const [rows] = await promisePool.query(
+    const [rows, fields] = await promisePool.query(
         `SELECT * FROM users;`
     )
     return NextResponse.json(rows)
