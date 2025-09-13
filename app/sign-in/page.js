@@ -64,15 +64,6 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     }),
   },
 }));
-
-async function getUsers() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`)
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
-}
-
 export default function SignIn(props) {
   const [userError, setUserError] = React.useState(false);
   const [userErrorMessage, setUserErrorMessage] = React.useState('');
