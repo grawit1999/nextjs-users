@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { mysqlPool } from "@/utils/db";
 
- export async function GET(request, { params }) {
+export async function GET(request, { params }) {
   const id = params.id
+  var { searchParams } = new URL(request.url);
+  var user = searchParams.get("id");
+  console.log("user",user);
+
   const promisePool = mysqlPool.promise()
   const [rows, fields] = await promisePool.query(
     `SELECT * FROM attractions WHERE id = ?`,

@@ -11,7 +11,7 @@ async function getData(id) {
   return res.json()
 }
 
-export default async function page({ params }) {
+export default async function page({ params, searchParams }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     return null
   }
