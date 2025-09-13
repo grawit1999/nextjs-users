@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import {
     Card, CardActions, CardContent, CardMedia, Button, Typography, Grid
