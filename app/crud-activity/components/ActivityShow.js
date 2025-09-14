@@ -130,39 +130,39 @@ export default function ActivityShow() {
             <Paper sx={{ px: 2, py: 1 }}>
               <Typography variant="overline">Name</Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                {activity.name}
+                {activity.TASK_NAME}
               </Typography>
             </Paper>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          {/* <Grid size={{ xs: 12, sm: 6 }}>
             <Paper sx={{ px: 2, py: 1 }}>
               <Typography variant="overline">Age</Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
                 {activity.age}
               </Typography>
             </Paper>
-          </Grid>
+          </Grid> */}
           <Grid size={{ xs: 12, sm: 6 }}>
             <Paper sx={{ px: 2, py: 1 }}>
-              <Typography variant="overline">Join date</Typography>
+              <Typography variant="overline">Due Date</Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                {dayjs(activity.joinDate).format('MMMM D, YYYY')}
+                {dayjs(activity.DUE_DATE).format('MMMM D, YYYY')}
               </Typography>
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <Paper sx={{ px: 2, py: 1 }}>
-              <Typography variant="overline">Department</Typography>
+              <Typography variant="overline">Priority</Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                {activity.role}
+                {activity.PRIORITY}
               </Typography>
             </Paper>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <Paper sx={{ px: 2, py: 1 }}>
-              <Typography variant="overline">Full-time</Typography>
+              <Typography variant="overline">Completion</Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                {activity.isFullTime ? 'Yes' : 'No'}
+                {activity.COMPLETION ? 'Yes' : 'No'}
               </Typography>
             </Paper>
           </Grid>

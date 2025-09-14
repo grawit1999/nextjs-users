@@ -113,16 +113,16 @@ function ActivityForm(props) {
         <Grid container spacing={2} sx={{ mb: 2, width: '100%' }}>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <TextField
-              value={formValues.name ?? ''}
+              value={formValues.TASK_NAME ?? ''}
               onChange={handleTextFieldChange}
               name="name"
               label="Name"
-              error={!!formErrors.name}
-              helperText={formErrors.name ?? ' '}
+              error={!!formErrors.TASK_NAME}
+              helperText={formErrors.TASK_NAME ?? ' '}
               fullWidth
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+          {/* <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <TextField
               type="number"
               value={formValues.age ?? ''}
@@ -133,18 +133,18 @@ function ActivityForm(props) {
               helperText={formErrors.age ?? ' '}
               fullWidth
             />
-          </Grid>
+          </Grid> */}
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                value={formValues.joinDate ? dayjs(formValues.joinDate) : null}
-                onChange={handleDateFieldChange('joinDate')}
+                value={formValues.DUE_DATE ? dayjs(formValues.DUE_DATE) : null}
+                onChange={handleDateFieldChange('DUE_DATE')}
                 name="joinDate"
-                label="Join date"
+                label="Due Date"
                 slotProps={{
                   textField: {
-                    error: !!formErrors.joinDate,
-                    helperText: formErrors.joinDate ?? ' ',
+                    error: !!formErrors.DUE_DATE,
+                    helperText: formErrors.DUE_DATE ?? ' ',
                     fullWidth: true,
                   },
                 }}
@@ -152,10 +152,10 @@ function ActivityForm(props) {
             </LocalizationProvider>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
-            <FormControl error={!!formErrors.role} fullWidth>
+            <FormControl error={!!formErrors.PRIORITY} fullWidth>
               <InputLabel id="activity-role-label">Department</InputLabel>
               <Select
-                value={formValues.role ?? ''}
+                value={formValues.PRIORITY ?? ''}
                 onChange={handleSelectFieldChange}
                 labelId="activity-role-label"
                 name="role"
@@ -163,11 +163,11 @@ function ActivityForm(props) {
                 defaultValue=""
                 fullWidth
               >
-                <MenuItem value="Market">Market</MenuItem>
-                <MenuItem value="Finance">Finance</MenuItem>
-                <MenuItem value="Development">Development</MenuItem>
+                <MenuItem value="LOW">Low</MenuItem>
+                <MenuItem value="MEDIUM">Medium</MenuItem>
+                <MenuItem value="HIGH">High</MenuItem>
               </Select>
-              <FormHelperText>{formErrors.role ?? ' '}</FormHelperText>
+              <FormHelperText>{formErrors.PRIORITY ?? ' '}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
@@ -177,14 +177,14 @@ function ActivityForm(props) {
                 control={
                   <Checkbox
                     size="large"
-                    checked={formValues.isFullTime ?? false}
+                    checked={formValues.COMPLETION ?? false}
                     onChange={handleCheckboxFieldChange}
                   />
                 }
                 label="Full-time"
               />
-              <FormHelperText error={!!formErrors.isFullTime}>
-                {formErrors.isFullTime ?? ' '}
+              <FormHelperText error={!!formErrors.COMPLETION}>
+                {formErrors.COMPLETION ?? ' '}
               </FormHelperText>
             </FormControl>
           </Grid>

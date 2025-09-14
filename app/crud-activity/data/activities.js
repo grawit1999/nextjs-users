@@ -25,8 +25,32 @@ const INITIAL_EMPLOYEES_STORE = [
   },
 ];
 
-export function getActivitiesStore() {
+export async function getActivitiesStore() {
+  try {
+    // เรียก API login จริง ๆ
+    var dataInput = {
+      user_id: JSON.parse(localStorage.getItem("user") || "{}")?.USER_ID,
+    }
+    console.log(dataInput);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataInput),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      console.log('data.activities:', data.activities);
+      localStorage.setItem('activities-store', JSON.stringify(data.activities));
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    console.error(err);
+  }
   const stringifiedActivities = localStorage.getItem('activities-store');
+  console.log(JSON.parse(stringifiedActivities));
+
   return stringifiedActivities
     ? JSON.parse(stringifiedActivities)
     : INITIAL_EMPLOYEES_STORE;
@@ -37,7 +61,8 @@ export function setActivitiesStore(activities) {
 }
 
 export async function getMany({ paginationModel, filterModel, sortModel }) {
-  const activitiesStore = getActivitiesStore();
+  const activitiesStore = await getActivitiesStore();
+  console.log(activitiesStore);
 
   let filteredActivities = [...activitiesStore];
 
@@ -104,10 +129,11 @@ export async function getMany({ paginationModel, filterModel, sortModel }) {
 }
 
 export async function getOne(activityId) {
-  const activitiesStore = getActivitiesStore();
+  const activitiesStore = await getActivitiesStore();
+  console.log(activityId);
 
   const activityToShow = activitiesStore.find(
-    (activity) => activity.id === activityId,
+    (activity) => activity.TASK_ID === activityId,
   );
 
   if (!activityToShow) {
@@ -161,28 +187,22 @@ export async function deleteOne(activityId) {
 export function validate(activity) {
   let issues = [];
 
-  if (!activity.name) {
-    issues = [...issues, { message: 'Name is required', path: ['name'] }];
+  if (!activity.TASK_NAME) {
+    issues = [...issues, { message: 'Name is required', path: ['TASK_NAME'] }];
   }
 
-  if (!activity.age) {
-    issues = [...issues, { message: 'Age is required', path: ['age'] }];
-  } else if (activity.age < 18) {
-    issues = [...issues, { message: 'Age must be at least 18', path: ['age'] }];
+  if (!activity.DUE_DATE) {
+    issues = [...issues, { message: 'Join date is required', path: ['DUE_DATE'] }];
   }
 
-  if (!activity.joinDate) {
-    issues = [...issues, { message: 'Join date is required', path: ['joinDate'] }];
-  }
-
-  if (!activity.role) {
-    issues = [...issues, { message: 'Role is required', path: ['role'] }];
-  } else if (!['Market', 'Finance', 'Development'].includes(activity.role)) {
+  if (!activity.PRIORITY) {
+    issues = [...issues, { message: 'Priority is required', path: ['PRIORITY'] }];
+  } else if (!['Low', 'MEDIUM', 'HIGH'].includes(activity.role)) {
     issues = [
       ...issues,
       {
-        message: 'Role must be "Market", "Finance" or "Development"',
-        path: ['role'],
+        message: 'Role must be "Low", "MEDIUM" or "HIGH"',
+        path: ['PRIORITY'],
       },
     ];
   }

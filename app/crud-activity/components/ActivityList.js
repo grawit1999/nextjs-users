@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -25,7 +26,6 @@ export default function ActivityList() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const dialogs = useDialogs();
   const notifications = useNotifications();
 
@@ -143,7 +143,7 @@ export default function ActivityList() {
 
   const handleRowClick = React.useCallback(
     ({ row }) => {
-      navigate(`/activities/${row.id}`);
+      navigate(`/activities/${row.TASK_ID}`);
     },
     [navigate],
   );
@@ -154,7 +154,7 @@ export default function ActivityList() {
 
   const handleRowEdit = React.useCallback(
     (activity) => () => {
-      navigate(`/activities/${activity.id}/edit`);
+      navigate(`/activities/${activity.TASK_ID}/edit`);
     },
     [navigate],
   );
@@ -162,7 +162,7 @@ export default function ActivityList() {
   const handleRowDelete = React.useCallback(
     (activity) => async () => {
       const confirmed = await dialogs.confirm(
-        `Do you wish to delete ${activity.name}?`,
+        `Do you wish to delete ${activity.TASK_NAME}?`,
         {
           title: `Delete activity?`,
           severity: 'error',
@@ -174,7 +174,7 @@ export default function ActivityList() {
       if (confirmed) {
         setIsLoading(true);
         try {
-          await deleteActivity(Number(activity.id));
+          await deleteActivity(Number(activity.TASK_ID));
 
           notifications.show('Activity deleted successfully.', {
             severity: 'success',
@@ -205,24 +205,23 @@ export default function ActivityList() {
 
   const columns = React.useMemo(
     () => [
-      { field: 'id', headerName: 'ID' },
-      { field: 'name', headerName: 'Name', width: 140 },
-      { field: 'age', headerName: 'Age', type: 'number' },
+      { field: 'TASK_ID', headerName: 'ID' },
+      { field: 'TASK_NAME', headerName: 'Name', width: 250 },
       {
-        field: 'joinDate',
-        headerName: 'Join date',
+        field: 'DUE_DATE',
+        headerName: 'Due Date',
         type: 'date',
         valueGetter: (value) => value && new Date(value),
         width: 140,
       },
       {
-        field: 'role',
-        headerName: 'Department',
+        field: 'PRIORITY',
+        headerName: 'Priority',
         type: 'singleSelect',
-        valueOptions: ['Market', 'Finance', 'Development'],
-        width: 160,
+        valueOptions: ['LOW', 'MEDIUM', 'HIGH'],
+        width: 140,
       },
-      { field: 'isFullTime', headerName: 'Full-time', type: 'boolean' },
+      { field: 'COMPLETION', headerName: 'Completion', type: 'boolean' },
       {
         field: 'actions',
         type: 'actions',
@@ -282,6 +281,7 @@ export default function ActivityList() {
             rows={rowsState.rows}
             rowCount={rowsState.rowCount}
             columns={columns}
+            getRowId={(row) => row.TASK_ID}
             pagination
             sortingMode="server"
             filterMode="server"
@@ -303,9 +303,9 @@ export default function ActivityList() {
                 outline: 'transparent',
               },
               [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
-                {
-                  outline: 'none',
-                },
+              {
+                outline: 'none',
+              },
               [`& .${gridClasses.row}:hover`]: {
                 cursor: 'pointer',
               },
