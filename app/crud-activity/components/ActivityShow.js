@@ -205,7 +205,7 @@ export default function ActivityShow() {
     handleActivityDelete,
   ]);
 
-  const pageTitle = `Activity ${activityId}`;
+  const pageTitle = `Activity`;
 
   return (
     <PageContainer

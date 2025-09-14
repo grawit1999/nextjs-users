@@ -47,6 +47,7 @@ export async function getActivitiesStore() {
       } else {
         // refresh_token หมดอายุ → login ใหม่
         localStorage.clear();
+        alert("🔴 Access token หมดอายุ");
         window.location.href = '/sign-in'
       }
     }
@@ -207,6 +208,7 @@ export async function createOne(data_) {
       } else {
         // refresh_token หมดอายุ → login ใหม่
         localStorage.clear();
+        alert("🔴 Access token หมดอายุ");
         window.location.href = '/sign-in'
       }
 
@@ -280,6 +282,7 @@ export async function updateOne(activityId, data) {
             } else {
               // refresh_token หมดอายุ → login ใหม่
               localStorage.clear();
+              alert("🔴 Access token หมดอายุ");
               window.location.href = '/sign-in'
             }
 
@@ -351,6 +354,7 @@ export async function deleteOne(activityId) {
       } else {
         // refresh_token หมดอายุ → login ใหม่
         localStorage.clear();
+        alert("🔴 Access token หมดอายุ");
         window.location.href = '/sign-in'
       }
 

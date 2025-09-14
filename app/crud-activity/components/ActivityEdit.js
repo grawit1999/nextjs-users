@@ -179,10 +179,10 @@ export default function ActivityEdit() {
 
   return (
     <PageContainer
-      title={`Edit Activity ${activityId}`}
+      title={`Edit Activity`}
       breadcrumbs={[
         { title: 'Activities', path: '/activities' },
-        { title: `Activity ${activityId}`, path: `/activities/${activityId}` },
+        { title: `Activity`, path: `/activities/${activityId}` },
         { title: 'Edit' },
       ]}
     >
