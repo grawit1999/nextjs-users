@@ -40,7 +40,6 @@ function ActivityForm(props) {
   const handleSubmit = React.useCallback(
     async (event) => {
       event.preventDefault();
-
       setIsSubmitting(true);
       try {
         await onSubmit(formValues);
@@ -115,8 +114,8 @@ function ActivityForm(props) {
             <TextField
               value={formValues.TASK_NAME ?? ''}
               onChange={handleTextFieldChange}
-              name="name"
-              label="Name"
+              name="TASK_NAME"
+              label="TASK_NAME"
               error={!!formErrors.TASK_NAME}
               helperText={formErrors.TASK_NAME ?? ' '}
               fullWidth
@@ -139,8 +138,8 @@ function ActivityForm(props) {
               <DatePicker
                 value={formValues.DUE_DATE ? dayjs(formValues.DUE_DATE) : null}
                 onChange={handleDateFieldChange('DUE_DATE')}
-                name="joinDate"
-                label="Due Date"
+                name="DUE_DATE"
+                label="DUE_DATE"
                 slotProps={{
                   textField: {
                     error: !!formErrors.DUE_DATE,
@@ -153,13 +152,13 @@ function ActivityForm(props) {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl error={!!formErrors.PRIORITY} fullWidth>
-              <InputLabel id="activity-role-label">Department</InputLabel>
+              <InputLabel id="activity-role-label">Priority</InputLabel>
               <Select
                 value={formValues.PRIORITY ?? ''}
                 onChange={handleSelectFieldChange}
                 labelId="activity-role-label"
-                name="role"
-                label="Department"
+                name="PRIORITY"
+                label="PRIORITY"
                 defaultValue=""
                 fullWidth
               >
@@ -173,7 +172,7 @@ function ActivityForm(props) {
           <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
             <FormControl>
               <FormControlLabel
-                name="isFullTime"
+                name="COMPLETION"
                 control={
                   <Checkbox
                     size="large"
@@ -181,7 +180,7 @@ function ActivityForm(props) {
                     onChange={handleCheckboxFieldChange}
                   />
                 }
-                label="Full-time"
+                label="COMPLETION"
               />
               <FormHelperText error={!!formErrors.COMPLETION}>
                 {formErrors.COMPLETION ?? ' '}
@@ -215,18 +214,18 @@ ActivityForm.propTypes = {
   backButtonPath: PropTypes.string,
   formState: PropTypes.shape({
     errors: PropTypes.shape({
-      age: PropTypes.string,
-      isFullTime: PropTypes.string,
-      joinDate: PropTypes.string,
-      name: PropTypes.string,
-      role: PropTypes.string,
+      // age: PropTypes.string,
+      COMPLETION: PropTypes.string,
+      DUE_DATE: PropTypes.string,
+      TASK_NAME: PropTypes.string,
+      PRIORITY: PropTypes.string,
     }).isRequired,
     values: PropTypes.shape({
-      age: PropTypes.number,
-      isFullTime: PropTypes.bool,
-      joinDate: PropTypes.string,
-      name: PropTypes.string,
-      role: PropTypes.oneOf(['Development', 'Finance', 'Market']),
+      // age: PropTypes.number,
+      COMPLETION: PropTypes.bool,
+      DUE_DATE: PropTypes.string,
+      TASK_NAME: PropTypes.string,
+      PRIORITY: PropTypes.oneOf(['Low', 'Medium', 'High']),
     }).isRequired,
   }).isRequired,
   onFieldChange: PropTypes.func.isRequired,

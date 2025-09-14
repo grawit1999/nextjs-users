@@ -7,13 +7,15 @@ import {
 } from '../data/activities';
 import ActivityForm from './ActivityForm';
 import PageContainer from './PageContainer';
+import { useRouter } from "next/navigation";
 
 const INITIAL_FORM_VALUES = {
-  role: 'Market',
-  isFullTime: true,
+  PRIORITY: 'LOW',
+  COMPLETION: false,
 };
 
 export default function ActivityCreate() {
+  const router = useRouter();
   const navigate = useNavigate();
 
   const notifications = useNotifications();

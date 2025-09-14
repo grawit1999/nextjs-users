@@ -1,5 +1,9 @@
 import CrudDashboardClient from "./components/CrudDashboardClient";
 
-export default function Page(props) {
+
+export default async function Page(props) {
+
+
+
   return <CrudDashboardClient {...props} />;
 }

@@ -12,11 +12,12 @@ import {
 } from '../data/activities';
 import ActivityForm from './ActivityForm';
 import PageContainer from './PageContainer';
+import { useRouter } from "next/navigation";
 
 function ActivityEditForm({ initialValues, onSubmit }) {
   const { activityId } = useParams();
   const navigate = useNavigate();
-
+  const router = useRouter();
   const notifications = useNotifications();
 
   const [formState, setFormState] = React.useState(() => ({
@@ -107,7 +108,7 @@ ActivityEditForm.propTypes = {
     isFullTime: PropTypes.bool,
     joinDate: PropTypes.string,
     name: PropTypes.string,
-    role: PropTypes.oneOf(['Development', 'Finance', 'Market']),
+    role: PropTypes.oneOf(['Low', 'Medium', 'High']),
   }).isRequired,
   onSubmit: PropTypes.func.isRequired,
 };

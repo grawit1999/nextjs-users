@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { mysqlPool } from "@/utils/db";
+import { generateAccessToken, generateRefreshToken } from "@/utils/jwt";
+
 
 export async function GET(request) {
     const promisePool = mysqlPool.promise()
@@ -23,7 +25,17 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Invalid username or password' }, { status: 401 });
         }
         // login สำเร็จ
-        return NextResponse.json({ success: true, user: rows[0] });
+        const user = rows[0];
+
+        const access_token = generateAccessToken(user);
+        const refresh_token = generateRefreshToken(user);
+
+        return NextResponse.json({
+            success: true,
+            user,
+            access_token,
+            refresh_token,
+        });
     } catch (err) {
         console.error(err);
         return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });

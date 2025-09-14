@@ -1,47 +1,47 @@
-const INITIAL_EMPLOYEES_STORE = [
-  {
-    id: 1,
-    name: 'Edward Perry',
-    age: 25,
-    joinDate: '2025-07-16T00:00:00.000Z',
-    role: 'Finance',
-    isFullTime: true,
-  },
-  {
-    id: 2,
-    name: 'Josephine Drake',
-    age: 36,
-    joinDate: '2025-07-16T00:00:00.000Z',
-    role: 'Market',
-    isFullTime: false,
-  },
-  {
-    id: 3,
-    name: 'Cody Phillips',
-    age: 19,
-    joinDate: '2025-07-16T00:00:00.000Z',
-    role: 'Development',
-    isFullTime: true,
-  },
-];
+
+import { useRouter } from "next/navigation";
+import jwtDecode from "jwt-decode";
+
+const INITIAL_EMPLOYEES_STORE = [];
+
+function isTokenExpired(token) {
+  return false;
+  // try {
+  //   const decoded = jwtDecode(token); // no type annotation
+  //   const now = Date.now() / 1000; // convert to seconds
+  //   return decoded.exp < now; // true = หมดอายุ
+  // } catch (err) {
+  //   return true; // invalid token ถือว่า expired
+  // }
+}
+
 
 export async function getActivitiesStore() {
+
   try {
-    // เรียก API login จริง ๆ
     var dataInput = {
-      user_id: JSON.parse(localStorage.getItem("user") || "{}")?.USER_ID,
+      USER_ID: JSON.parse(localStorage.getItem("user") || "{}")?.USER_ID
     }
-    console.log(dataInput);
+    const accessToken = localStorage.getItem("access_token");
+    // console.log(dataInput);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${accessToken}`
+      },
       body: JSON.stringify(dataInput),
     });
 
     const data = await res.json();
     if (data.success) {
-      console.log('data.activities:', data.activities);
-      localStorage.setItem('activities-store', JSON.stringify(data.activities));
+
+      const activitiesWithIndex = data.activities.map((activity, index) => ({
+        index: index + 1, // เริ่มจาก 1
+        ...activity
+      }));
+      console.log('data.activities:', activitiesWithIndex);
+      localStorage.setItem('activities-store', JSON.stringify(activitiesWithIndex));
     } else {
       alert(data.message);
     }
@@ -49,7 +49,7 @@ export async function getActivitiesStore() {
     console.error(err);
   }
   const stringifiedActivities = localStorage.getItem('activities-store');
-  console.log(JSON.parse(stringifiedActivities));
+  // console.log(JSON.parse(stringifiedActivities));
 
   return stringifiedActivities
     ? JSON.parse(stringifiedActivities)
@@ -62,7 +62,7 @@ export function setActivitiesStore(activities) {
 
 export async function getMany({ paginationModel, filterModel, sortModel }) {
   const activitiesStore = await getActivitiesStore();
-  console.log(activitiesStore);
+  // console.log(activitiesStore);
 
   let filteredActivities = [...activitiesStore];
 
@@ -130,7 +130,7 @@ export async function getMany({ paginationModel, filterModel, sortModel }) {
 
 export async function getOne(activityId) {
   const activitiesStore = await getActivitiesStore();
-  console.log(activityId);
+  // console.log(activityId);
 
   const activityToShow = activitiesStore.find(
     (activity) => activity.TASK_ID === activityId,
@@ -142,13 +142,69 @@ export async function getOne(activityId) {
   return activityToShow;
 }
 
-export async function createOne(data) {
-  const activitiesStore = getActivitiesStore();
-
+export async function createOne(data_) {
+  const activitiesStore = await getActivitiesStore();
+  const dataIn = data_
   const newActivity = {
-    id: activitiesStore.reduce((max, activity) => Math.max(max, activity.id), 0) + 1,
-    ...data,
+    id: activitiesStore.reduce((max, activity) => Math.max(max, activity.TASK_ID), 0) + 1,
+    ...dataIn,
   };
+  try {
+    var dataInput = {
+      USER_ID: JSON.parse(localStorage.getItem("user") || "{}")?.USER_ID,
+      TASK_NAME: dataIn.TASK_NAME,
+      DUE_DATE: dataIn.DUE_DATE,
+      PRIORITY: dataIn.PRIORITY,
+      COMPLETION: dataIn.COMPLETION
+    }
+    const accessToken = localStorage.getItem("access_token");
+    //เช็ค isTokenExpired
+    if (isTokenExpired(accessToken)) {
+      console.log("🔴 Access token หมดอายุ");
+      const refreshToken = localStorage.getItem("refresh_token");
+      const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (refreshRes.ok) {
+        const data = await refreshRes.json();
+        accessToken = data.access_token;
+        localStorage.setItem("access_token", accessToken);
+
+        // retry request เดิม
+        res = await fetch(url, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      } else {
+        // refresh_token หมดอายุ → login ใหม่
+        localStorage.clear();
+        router.push('/sign-in');
+      }
+
+    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity/insert`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(dataInput),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      // console.log('data:', data);
+      // localStorage.setItem('user', JSON.stringify(data.user));
+      // router.push('/crud-activity');
+    } else {
+      alert(data.message);
+    }
+
+  } catch (err) {
+    console.error(err);
+  }
 
   setActivitiesStore([...activitiesStore, newActivity]);
 
@@ -156,14 +212,70 @@ export async function createOne(data) {
 }
 
 export async function updateOne(activityId, data) {
-  const activitiesStore = getActivitiesStore();
+  const activitiesStore = await getActivitiesStore();
 
   let updatedActivity = null;
 
   setActivitiesStore(
-    activitiesStore.map((activity) => {
-      if (activity.id === activityId) {
+    activitiesStore.map(async (activity) => {
+      if (activity.TASK_ID === activityId) {
         updatedActivity = { ...activity, ...data };
+        try {
+          var dataInput = {
+            TASK_ID: updatedActivity.TASK_ID,
+            TASK_NAME: updatedActivity.TASK_NAME,
+            DUE_DATE: updatedActivity.DUE_DATE,
+            PRIORITY: updatedActivity.PRIORITY,
+            COMPLETION: updatedActivity.COMPLETION
+          }
+          const accessToken = localStorage.getItem("access_token");
+          //เช็ค isTokenExpired
+          if (isTokenExpired(accessToken)) {
+            console.log("🔴 Access token หมดอายุ");
+            const refreshToken = localStorage.getItem("refresh_token");
+            const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refresh_token: refreshToken }),
+            });
+
+            if (refreshRes.ok) {
+              const data = await refreshRes.json();
+              accessToken = data.access_token;
+              localStorage.setItem("access_token", accessToken);
+
+              // retry request เดิม
+              res = await fetch(url, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              });
+            } else {
+              // refresh_token หมดอายุ → login ใหม่
+              localStorage.clear();
+              router.push('/sign-in');
+            }
+
+          }
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(dataInput),
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            // console.log('data:', data);
+            // localStorage.setItem('user', JSON.stringify(data.user));
+            // router.push('/crud-activity');
+          } else {
+            alert(data.message);
+          }
+
+        } catch (err) {
+          console.error(err);
+        }
         return updatedActivity;
       }
       return activity;
@@ -177,9 +289,61 @@ export async function updateOne(activityId, data) {
 }
 
 export async function deleteOne(activityId) {
-  const activitiesStore = getActivitiesStore();
+  const activitiesStore = await getActivitiesStore();
 
-  setActivitiesStore(activitiesStore.filter((activity) => activity.id !== activityId));
+  setActivitiesStore(activitiesStore.filter((activity) => activity.TASK_ID !== activityId));
+  try {
+    // เรียก API login จริง ๆ
+    var dataInput = {
+      TASK_ID: activityId
+    }
+    const accessToken = localStorage.getItem("access_token");
+    //เช็ค isTokenExpired
+    if (isTokenExpired(accessToken)) {
+      console.log("🔴 Access token หมดอายุ");
+      const refreshToken = localStorage.getItem("refresh_token");
+      const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (refreshRes.ok) {
+        const data = await refreshRes.json();
+        accessToken = data.access_token;
+        localStorage.setItem("access_token", accessToken);
+
+        // retry request เดิม
+        res = await fetch(url, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      } else {
+        // refresh_token หมดอายุ → login ใหม่
+        localStorage.clear();
+        router.push('/sign-in');
+      }
+
+    }
+    // console.log(dataInput);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(dataInput),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      // console.log('data:', data);
+      // localStorage.setItem('activities-store', JSON.stringify(data.activities));
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Validation follows the [Standard Schema](https://standardschema.dev/).
@@ -197,11 +361,11 @@ export function validate(activity) {
 
   if (!activity.PRIORITY) {
     issues = [...issues, { message: 'Priority is required', path: ['PRIORITY'] }];
-  } else if (!['Low', 'MEDIUM', 'HIGH'].includes(activity.role)) {
+  } else if (!['LOW', 'MEDIUM', 'HIGH'].includes(activity.PRIORITY)) {
     issues = [
       ...issues,
       {
-        message: 'Role must be "Low", "MEDIUM" or "HIGH"',
+        message: 'Role must be "LOW", "MEDIUM" or "HIGH"',
         path: ['PRIORITY'],
       },
     ];

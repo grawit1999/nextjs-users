@@ -19,6 +19,7 @@ import {
   getMany as getActivities,
 } from '../data/activities';
 import PageContainer from './PageContainer';
+import { useRouter } from "next/navigation";
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -28,6 +29,7 @@ export default function ActivityList() {
   const navigate = useNavigate();
   const dialogs = useDialogs();
   const notifications = useNotifications();
+  const router = useRouter();
 
   const [paginationModel, setPaginationModel] = React.useState({
     page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
@@ -205,7 +207,7 @@ export default function ActivityList() {
 
   const columns = React.useMemo(
     () => [
-      { field: 'TASK_ID', headerName: 'ID' },
+      { field: 'index', headerName: 'Seq' },
       { field: 'TASK_NAME', headerName: 'Name', width: 250 },
       {
         field: 'DUE_DATE',

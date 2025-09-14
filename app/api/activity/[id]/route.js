@@ -1,0 +1,15 @@
+import { NextResponse } from "next/server";
+import { mysqlPool } from "@/utils/db";
+
+export async function GET(request, { params }) {
+    const TASKS_ID = params.id
+    const promisePool = mysqlPool.promise()
+    const [rows, fields] = await promisePool.query(
+        `SELECT * FROM TASKS WHERE TASKS_ID = ?`,
+        [TASKS_ID]
+    )
+    return NextResponse.json(rows)
+}
+
+
+

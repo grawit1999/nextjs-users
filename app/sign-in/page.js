@@ -64,6 +64,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     }),
   },
 }));
+
+
 export default function SignIn(props) {
   const [userError, setUserError] = React.useState(false);
   const [userErrorMessage, setUserErrorMessage] = React.useState('');
@@ -116,7 +118,7 @@ export default function SignIn(props) {
         username: userInput.value,
         password: passwordInput.value
       }
-      console.log(dataInput);
+      // console.log(dataInput);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -125,8 +127,10 @@ export default function SignIn(props) {
 
       const data = await res.json();
       if (data.success) {
-        console.log('Login success:', data.user);
+        // console.log('Login success:', data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
         router.push('/crud-activity'); // redirect
       } else {
         alert(data.message);
