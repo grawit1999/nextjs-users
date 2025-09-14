@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "my_access_secret";
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "my_refresh_secret";
 

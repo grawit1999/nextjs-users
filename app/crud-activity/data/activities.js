@@ -1,18 +1,17 @@
 
 import { useRouter } from "next/navigation";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const INITIAL_EMPLOYEES_STORE = [];
 
-function isTokenExpired(token) {
-  return false;
-  // try {
-  //   const decoded = jwtDecode(token); // no type annotation
-  //   const now = Date.now() / 1000; // convert to seconds
-  //   return decoded.exp < now; // true = หมดอายุ
-  // } catch (err) {
-  //   return true; // invalid token ถือว่า expired
-  // }
+async function isTokenExpired(token) {
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp < now;
+  } catch (err) {
+    return false; // invalid token ถือว่า expired
+  }
 }
 
 
@@ -22,7 +21,35 @@ export async function getActivitiesStore() {
     var dataInput = {
       USER_ID: JSON.parse(localStorage.getItem("user") || "{}")?.USER_ID
     }
-    const accessToken = localStorage.getItem("access_token");
+    var accessToken = localStorage.getItem("access_token");
+    var refresh_token
+    //เช็ค isTokenExpired
+    if (isTokenExpired(accessToken)) {
+      console.log("🔴 Access token หมดอายุ");
+      var refreshToken = localStorage.getItem("refresh_token");
+      const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (refreshRes.ok) {
+        const data = await refreshRes.json();
+        accessToken = data.access_token;
+        refresh_token = data.refresh_token
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refresh_token);
+
+        // retry request เดิม
+        // res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        //   headers: { Authorization: `Bearer ${accessToken}` },
+        // });
+      } else {
+        // refresh_token หมดอายุ → login ใหม่
+        localStorage.clear();
+        window.location.href = '/sign-in'
+      }
+    }
     // console.log(dataInput);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activity`, {
       method: 'POST',
@@ -32,15 +59,13 @@ export async function getActivitiesStore() {
       },
       body: JSON.stringify(dataInput),
     });
-
     const data = await res.json();
     if (data.success) {
-
       const activitiesWithIndex = data.activities.map((activity, index) => ({
         index: index + 1, // เริ่มจาก 1
         ...activity
       }));
-      console.log('data.activities:', activitiesWithIndex);
+      // console.log('data.activities:', activitiesWithIndex);
       localStorage.setItem('activities-store', JSON.stringify(activitiesWithIndex));
     } else {
       alert(data.message);
@@ -157,11 +182,11 @@ export async function createOne(data_) {
       PRIORITY: dataIn.PRIORITY,
       COMPLETION: dataIn.COMPLETION
     }
-    const accessToken = localStorage.getItem("access_token");
+    var accessToken = localStorage.getItem("access_token");
     //เช็ค isTokenExpired
     if (isTokenExpired(accessToken)) {
       console.log("🔴 Access token หมดอายุ");
-      const refreshToken = localStorage.getItem("refresh_token");
+      var refreshToken = localStorage.getItem("refresh_token");
       const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -171,16 +196,18 @@ export async function createOne(data_) {
       if (refreshRes.ok) {
         const data = await refreshRes.json();
         accessToken = data.access_token;
+        refresh_token = data.refresh_token
         localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refresh_token);
 
         // retry request เดิม
-        res = await fetch(url, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        // res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        //   headers: { Authorization: `Bearer ${accessToken}` },
+        // });
       } else {
         // refresh_token หมดอายุ → login ใหม่
         localStorage.clear();
-        router.push('/sign-in');
+        window.location.href = '/sign-in'
       }
 
     }
@@ -228,11 +255,11 @@ export async function updateOne(activityId, data) {
             PRIORITY: updatedActivity.PRIORITY,
             COMPLETION: updatedActivity.COMPLETION
           }
-          const accessToken = localStorage.getItem("access_token");
+          var accessToken = localStorage.getItem("access_token");
           //เช็ค isTokenExpired
           if (isTokenExpired(accessToken)) {
             console.log("🔴 Access token หมดอายุ");
-            const refreshToken = localStorage.getItem("refresh_token");
+            var refreshToken = localStorage.getItem("refresh_token");
             const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -242,16 +269,18 @@ export async function updateOne(activityId, data) {
             if (refreshRes.ok) {
               const data = await refreshRes.json();
               accessToken = data.access_token;
+              refresh_token = data.refresh_token
               localStorage.setItem("access_token", accessToken);
+              localStorage.setItem("refresh_token", refresh_token);
 
               // retry request เดิม
-              res = await fetch(url, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-              });
+              // res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+              //   headers: { Authorization: `Bearer ${accessToken}` },
+              // });
             } else {
               // refresh_token หมดอายุ → login ใหม่
               localStorage.clear();
-              router.push('/sign-in');
+              window.location.href = '/sign-in'
             }
 
           }
@@ -297,11 +326,11 @@ export async function deleteOne(activityId) {
     var dataInput = {
       TASK_ID: activityId
     }
-    const accessToken = localStorage.getItem("access_token");
+    var accessToken = localStorage.getItem("access_token");
     //เช็ค isTokenExpired
     if (isTokenExpired(accessToken)) {
       console.log("🔴 Access token หมดอายุ");
-      const refreshToken = localStorage.getItem("refresh_token");
+      var refreshToken = localStorage.getItem("refresh_token");
       const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -311,16 +340,18 @@ export async function deleteOne(activityId) {
       if (refreshRes.ok) {
         const data = await refreshRes.json();
         accessToken = data.access_token;
+        refresh_token = data.refresh_token
         localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refresh_token);
 
         // retry request เดิม
-        res = await fetch(url, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        // res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`, {
+        //   headers: { Authorization: `Bearer ${accessToken}` },
+        // });
       } else {
         // refresh_token หมดอายุ → login ใหม่
         localStorage.clear();
-        router.push('/sign-in');
+        window.location.href = '/sign-in'
       }
 
     }
