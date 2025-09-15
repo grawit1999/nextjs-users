@@ -98,12 +98,6 @@ function DashboardSidebar({
   const hasDrawerTransitions =
     isOverSmViewport && (!disableCollapsibleSidebar || isOverMdViewport);
 
-  // ฟังก์ชัน logout
-  const handleLogout = React.useCallback(() => {
-    // 1. เคลียร์ token / session
-    localStorage.clear();
-    window.location.href = '/sign-in'
-  });
 
   const getDrawerContent = React.useCallback(
     (viewport) => (
@@ -142,13 +136,15 @@ function DashboardSidebar({
               href="/activities"
               selected={!!matchPath('/activities/*', pathname) || pathname === '/'}
             />
-            <DashboardSidebarPageItem
-              id="logout"
-              title="Loguot"
-              icon={<LogoutIcon />}
-              onClick={handleLogout}
-            // selected={!!matchPath('/sign-in/*', pathname) || pathname === '/'}
-            />
+            <div onClick={() => {
+              window.location.href = '/sign-in' // ✅ ไปหน้าใหม่เลย
+            }}>
+              <DashboardSidebarPageItem
+                id="logout"
+                title="Loguot"
+                icon={<LogoutIcon />}
+              // selected={!!matchPath('/sign-in/*', pathname) || pathname === '/'}
+              /></div>
             <DashboardSidebarDividerItem />
             {/* <DashboardSidebarHeaderItem>Example items</DashboardSidebarHeaderItem>
             <DashboardSidebarPageItem

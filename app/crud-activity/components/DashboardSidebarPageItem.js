@@ -28,6 +28,7 @@ function DashboardSidebarPageItem({
   selected = false,
   disabled = false,
   nestedNavigation,
+
 }) {
   const sidebarContext = React.useContext(DashboardSidebarContext);
   if (!sidebarContext) {
@@ -78,7 +79,7 @@ function DashboardSidebarPageItem({
 
   const miniNestedNavigationSidebarContextValue = React.useMemo(() => {
     return {
-      onPageItemClick: onPageItemClick ?? (() => {}),
+      onPageItemClick: onPageItemClick ?? (() => { }),
       mini: false,
       fullyExpanded: true,
       fullyCollapsed: false,
@@ -92,13 +93,13 @@ function DashboardSidebarPageItem({
         disablePadding
         {...(nestedNavigation && mini
           ? {
-              onMouseEnter: () => {
-                setIsHovered(true);
-              },
-              onMouseLeave: () => {
-                setIsHovered(false);
-              },
-            }
+            onMouseEnter: () => {
+              setIsHovered(true);
+            },
+            onMouseLeave: () => {
+              setIsHovered(false);
+            },
+          }
           : {})}
         sx={{
           display: 'block',
@@ -115,21 +116,21 @@ function DashboardSidebarPageItem({
           }}
           {...(nestedNavigation && !mini
             ? {
-                onClick: handleClick,
-              }
+              onClick: handleClick,
+            }
             : {})}
           {...(!nestedNavigation
             ? {
-                LinkComponent,
-                ...(hasExternalHref
-                  ? {
-                      target: '_blank',
-                      rel: 'noopener noreferrer',
-                    }
-                  : {}),
-                to: href,
-                onClick: handleClick,
-              }
+              LinkComponent,
+              ...(hasExternalHref
+                ? {
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                }
+                : {}),
+              to: href,
+              onClick: handleClick,
+            }
             : {})}
         >
           {icon || mini ? (
@@ -137,11 +138,11 @@ function DashboardSidebarPageItem({
               sx={
                 mini
                   ? {
-                      position: 'absolute',
-                      left: '50%',
-                      top: 'calc(50% - 6px)',
-                      transform: 'translate(-50%, -50%)',
-                    }
+                    position: 'absolute',
+                    left: '50%',
+                    top: 'calc(50% - 6px)',
+                    transform: 'translate(-50%, -50%)',
+                  }
                   : {}
               }
             >

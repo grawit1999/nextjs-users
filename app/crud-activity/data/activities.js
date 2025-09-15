@@ -184,6 +184,7 @@ export async function createOne(data_) {
       COMPLETION: dataIn.COMPLETION
     }
     var accessToken = localStorage.getItem("access_token");
+    var refresh_token
     //เช็ค isTokenExpired
     if (isTokenExpired(accessToken)) {
       console.log("🔴 Access token หมดอายุ");
@@ -258,6 +259,7 @@ export async function updateOne(activityId, data) {
             COMPLETION: updatedActivity.COMPLETION
           }
           var accessToken = localStorage.getItem("access_token");
+          var refresh_token
           //เช็ค isTokenExpired
           if (isTokenExpired(accessToken)) {
             console.log("🔴 Access token หมดอายุ");
@@ -329,7 +331,8 @@ export async function deleteOne(activityId) {
     var dataInput = {
       TASK_ID: activityId
     }
-    var accessToken = localStorage.getItem("access_token");
+    var accessToken = localStorage.getItem("access_token")
+    var refresh_token;
     //เช็ค isTokenExpired
     if (isTokenExpired(accessToken)) {
       console.log("🔴 Access token หมดอายุ");

@@ -75,7 +75,9 @@ export default function SignIn(props) {
   const [users, setUsers] = useState([]);
   const router = useRouter();
 
-
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
   // const handleClickOpen = () => {
   //   setOpen(true);
   // };
