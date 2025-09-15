@@ -57,17 +57,17 @@ export default function DashboardLayout() {
         width: '100%',
       }}
     >
-      {/* <DashboardHeader
+       <DashboardHeader
         logo={<SitemarkIcon />}
-        title=""
+        title="TODO"
         menuOpen={isNavigationExpanded}
         onToggleMenu={handleToggleHeaderMenu}
       />
-      <DashboardSidebar
+     <DashboardSidebar
         expanded={isNavigationExpanded}
         setExpanded={setIsNavigationExpanded}
         container={layoutRef?.current ?? undefined}
-      /> */}
+      />
       <Box
         sx={{
           display: 'flex',

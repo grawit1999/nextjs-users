@@ -80,7 +80,7 @@ function DashboardHeader({ logo, title, menuOpen, onToggleMenu }) {
             <Box sx={{ mr: 1 }}>{getMenuIcon(menuOpen)}</Box>
             <Link to="/" style={{ textDecoration: 'none' }}>
               <Stack direction="row" alignItems="center">
-                {logo ? <LogoContainer>{logo}</LogoContainer> : null}
+                {/* {logo ? <LogoContainer>{logo}</LogoContainer> : null} */}
                 {title ? (
                   <Typography
                     variant="h6"
@@ -105,7 +105,7 @@ function DashboardHeader({ logo, title, menuOpen, onToggleMenu }) {
             sx={{ marginLeft: 'auto' }}
           >
             <Stack direction="row" alignItems="center">
-              <ThemeSwitcher />
+              {/* <ThemeSwitcher /> */}
             </Stack>
           </Stack>
         </Stack>

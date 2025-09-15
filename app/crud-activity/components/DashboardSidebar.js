@@ -8,6 +8,7 @@ import List from '@mui/material/List';
 import Toolbar from '@mui/material/Toolbar';
 
 import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
@@ -51,7 +52,7 @@ function DashboardSidebar({
 
     setIsFullyExpanded(false);
 
-    return () => {};
+    return () => { };
   }, [expanded, theme.transitions.duration.enteringScreen]);
 
   React.useEffect(() => {
@@ -65,7 +66,7 @@ function DashboardSidebar({
 
     setIsFullyCollapsed(false);
 
-    return () => {};
+    return () => { };
   }, [expanded, theme.transitions.duration.leavingScreen]);
 
   const mini = !disableCollapsibleSidebar && !expanded;
@@ -83,8 +84,8 @@ function DashboardSidebar({
         setExpandedItemIds((previousValue) =>
           previousValue.includes(itemId)
             ? previousValue.filter(
-                (previousValueItemId) => previousValueItemId !== itemId,
-              )
+              (previousValueItemId) => previousValueItemId !== itemId,
+            )
             : [...previousValue, itemId],
         );
       } else if (!isOverSmViewport && !hasNestedNavigation) {
@@ -96,6 +97,13 @@ function DashboardSidebar({
 
   const hasDrawerTransitions =
     isOverSmViewport && (!disableCollapsibleSidebar || isOverMdViewport);
+
+  // ฟังก์ชัน logout
+  const handleLogout = React.useCallback(() => {
+    // 1. เคลียร์ token / session
+    localStorage.clear();
+    window.location.href = '/sign-in'
+  });
 
   const getDrawerContent = React.useCallback(
     (viewport) => (
@@ -134,8 +142,15 @@ function DashboardSidebar({
               href="/activities"
               selected={!!matchPath('/activities/*', pathname) || pathname === '/'}
             />
+            <DashboardSidebarPageItem
+              id="logout"
+              title="Loguot"
+              icon={<LogoutIcon />}
+              onClick={handleLogout}
+            // selected={!!matchPath('/sign-in/*', pathname) || pathname === '/'}
+            />
             <DashboardSidebarDividerItem />
-            <DashboardSidebarHeaderItem>Example items</DashboardSidebarHeaderItem>
+            {/* <DashboardSidebarHeaderItem>Example items</DashboardSidebarHeaderItem>
             <DashboardSidebarPageItem
               id="reports"
               title="Reports"
@@ -177,7 +192,7 @@ function DashboardSidebar({
               icon={<LayersIcon />}
               href="/integrations"
               selected={!!matchPath('/integrations', pathname)}
-            />
+            /> */}
           </List>
         </Box>
       </React.Fragment>
