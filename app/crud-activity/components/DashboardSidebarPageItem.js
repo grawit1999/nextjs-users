@@ -173,7 +173,7 @@ function DashboardSidebarPageItem({
                 <Typography
                   variant="caption"
                   sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     bottom: -18,
                     left: '50%',
                     transform: 'translateX(-50%)',
@@ -209,7 +209,7 @@ function DashboardSidebarPageItem({
           <Grow in={isHovered}>
             <Box
               sx={{
-                position: 'fixed',
+                position: 'absolute',
                 left: MINI_DRAWER_WIDTH - 2,
                 pl: '6px',
               }}

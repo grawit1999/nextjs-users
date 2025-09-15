@@ -251,7 +251,8 @@ export default function ActivityList() {
   const pageTitle = 'Activities';
 
   return (
-    <PageContainer
+    
+    <PageContainer 
       title={pageTitle}
       breadcrumbs={[{ title: pageTitle }]}
       actions={

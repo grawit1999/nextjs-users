@@ -41,46 +41,54 @@ function PageContainer(props) {
   const { children, breadcrumbs, title, actions = null } = props;
 
   return (
-    <Container sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <Stack sx={{ flex: 1, my: 2 }} spacing={2}>
-        <Stack>
-          <PageHeaderBreadcrumbs
-            aria-label="breadcrumb"
-            separator={<NavigateNextRoundedIcon fontSize="small" />}
-          >
-            {breadcrumbs
-              ? breadcrumbs.map((breadcrumb, index) => {
-                  return breadcrumb.path ? (
-                    <MuiLink
-                      key={index}
-                      component={Link}
-                      underline="hover"
-                      color="inherit"
-                      to={breadcrumb.path}
-                    >
-                      {breadcrumb.title}
-                    </MuiLink>
-                  ) : (
-                    <Typography
-                      key={index}
-                      sx={{ color: 'text.primary', fontWeight: 600 }}
-                    >
-                      {breadcrumb.title}
-                    </Typography>
-                  );
-                })
-              : null}
-          </PageHeaderBreadcrumbs>
-          <PageContentHeader>
-            {title ? <Typography variant="h4">{title}</Typography> : null}
-            <PageHeaderToolbar>{actions}</PageHeaderToolbar>
-          </PageContentHeader>
-        </Stack>
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {children}
-        </Box>
+    // <Container sx={{  }}>
+    <Stack sx={{
+      mx: 2,
+      my: 2,
+    }} spacing={2}>
+      <Stack sx={{
+        flex: 1,
+        my: 2,
+        mx: 2,
+        width: '100%',
+      }} spacing={2}>
+        <PageHeaderBreadcrumbs
+          aria-label="breadcrumb"
+          separator={<NavigateNextRoundedIcon fontSize="small" />}
+        >
+          {breadcrumbs
+            ? breadcrumbs.map((breadcrumb, index) => {
+              return breadcrumb.path ? (
+                <MuiLink
+                  key={index}
+                  component={Link}
+                  underline="hover"
+                  color="inherit"
+                  to={breadcrumb.path}
+                >
+                  {breadcrumb.title}
+                </MuiLink>
+              ) : (
+                <Typography
+                  key={index}
+                  sx={{ color: 'text.primary', fontWeight: 600 }}
+                >
+                  {breadcrumb.title}
+                </Typography>
+              );
+            })
+            : null}
+        </PageHeaderBreadcrumbs>
+        <PageContentHeader>
+          {title ? <Typography variant="h4">{title}</Typography> : null}
+          <PageHeaderToolbar>{actions}</PageHeaderToolbar>
+        </PageContentHeader>
       </Stack>
-    </Container>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {children}
+      </Box>
+    </Stack>
+    // </Container>
   );
 }
 
