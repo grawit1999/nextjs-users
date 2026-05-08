@@ -9,7 +9,7 @@ import ActivityCreate from "./ActivityCreate";
 import ActivityEdit from "./ActivityEdit";
 import NotificationsProvider from "../hooks/useNotifications/NotificationsProvider";
 import DialogsProvider from "../hooks/useDialogs/DialogsProvider";
-import AppTheme from "../../shared-theme/AppTheme";
+import AppTheme from "../../../_theme/AppTheme";
 import {
     dataGridCustomizations,
     datePickersCustomizations,
